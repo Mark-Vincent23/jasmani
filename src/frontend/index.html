@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JasmaniAI - Klasifikasi Tes Jasmani TNI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html" class="active">Klasifikasi</a></li>
+            <li><a href="kesehatan.html">Penjelasan Kesehatan</a></li>
+            <li><a href="lihatdata.html" class="active">Lihat Data</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>JasmaniAI</h1>
+        <form id="jasmaniForm">
+            <label>Nama<input type="text" name="nama" required></label>
+            <label>Jarak Lari (meter): <input type="number" name="lari" required></label>
+            <label>Push-up (jumlah): <input type="number" name="pushup" required></label>
+            <label>Pull-up (jumlah): <input type="number" name="pullup" required></label>
+            <label>Sit-up (jumlah): <input type="number" name="situp" required></label>
+            <label>Shuttle Run (detik): <input type="number" name="shuttlerun" step="0.01" required></label>
+            <button type="submit">Klasifikasikan</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script src="../scripts/script.js"></script>
+</body>
+</html>

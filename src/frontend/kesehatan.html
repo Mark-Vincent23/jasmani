@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penjelasan Kesehatan - JasmaniAI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Klasifikasi</a></li>
+            <li><a href="kesehatan.html" class="active">Penjelasan Kesehatan</a></li>
+            <li><a href="lihatdata.html" class="active">Lihat Data</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Penjelasan Kesehatan Jasmani</h1>
+        <div id="interactive-section">
+            <p>Pilih topik kesehatan jasmani untuk penjelasan interaktif:</p>
+            <select id="topicSelect">
+                <option value="">-- Pilih Topik --</option>
+                <option value="lari">Manfaat Lari</option>
+                <option value="pushup">Manfaat Push-up</option>
+                <option value="pullup">Manfaat Pull-up</option>
+                <option value="situp">Manfaat Sit-up</option>
+                <option value="shuttlerun">Manfaat Shuttle Run</option>
+            </select>
+            <div id="topicContent" class="topic-content"></div>
+        </div>
+    </div>
+    <script src="../scripts/kesehatan.js"></script>
+</body>
+</html>
