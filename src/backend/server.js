@@ -30,7 +30,7 @@ const createTableQuery = `CREATE TABLE IF NOT EXISTS jasmani (
     shuttlerun REAL,
     skor REAL,
     kategori TEXT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    timestamp DATE DEFAULT CURRENT_DATE
 )`;
 db.run(createTableQuery);
 
@@ -52,7 +52,7 @@ app.post('/api/klasifikasi', (req, res) => {
     // Simpan ke database
     const { nama, lari, pushup, pullup, situp, shuttlerun } = data;
     db.run(
-        `INSERT INTO jasmani (nama, lari, pushup, pullup, situp, shuttlerun, skor, kategori) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO jasmani (nama, lari, pushup, pullup, situp, shuttlerun, skor, kategori, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, date('now'))`,
         [nama, lari, pushup, pullup, situp, shuttlerun, hasil.skor, hasil.kategori],
         function(err) {
             if (err) {
