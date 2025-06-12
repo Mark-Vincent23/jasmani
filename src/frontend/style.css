@@ -97,3 +97,84 @@ button:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     text-align: left;
 }
+
+/* Table styles for lihatdata.html */
+#jasmani-table {
+    width: 90%;
+    margin: 0 auto 2em auto;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+}
+#jasmani-table th, #jasmani-table td {
+    padding: 14px 12px;
+    text-align: center;
+    border-bottom: 1px solid #eaeaea;
+}
+#jasmani-table th {
+    background: #2a4d69;
+    color: #fff;
+    font-size: 1.05em;
+    letter-spacing: 0.5px;
+}
+#jasmani-table tbody tr:nth-child(even) {
+    background: #f4f6fa;
+}
+#jasmani-table tbody tr:hover {
+    background: #e0f7fa;
+    transition: background 0.2s;
+}
+#jasmani-table td {
+    color: #333;
+    font-size: 1em;
+}
+
+/* Responsive table */
+@media (max-width: 900px) {
+    #jasmani-table {
+        width: 100%;
+        font-size: 0.95em;
+    }
+    .navbar ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    .navbar li {
+        margin: 0.5em 0;
+    }
+}
+
+@media (max-width: 600px) {
+    #jasmani-table, #jasmani-table thead, #jasmani-table tbody, #jasmani-table th, #jasmani-table td, #jasmani-table tr {
+        display: block;
+    }
+    #jasmani-table thead tr {
+        display: none;
+    }
+    #jasmani-table tr {
+        margin-bottom: 1em;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
+        padding: 0.5em 0;
+    }
+    #jasmani-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border: none;
+        border-bottom: 1px solid #eaeaea;
+    }
+    #jasmani-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 48%;
+        padding-left: 1em;
+        font-weight: bold;
+        text-align: left;
+        color: #2a4d69;
+    }
+}
