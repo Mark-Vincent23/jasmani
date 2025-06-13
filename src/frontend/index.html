@@ -3,30 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JasmaniAI - Klasifikasi Tes Jasmani</title>
+    <title>Prediksi Jasmani AI</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <nav class="navbar">
         <ul>
-            <li><a href="index.html" class="active">Klasifikasi</a></li>
-            <li><a href="kesehatan.html">Penjelasan Kesehatan</a></li>
-            <li><a href="lihatdata.html" class="active">Lihat Data</a></li>
+            <li><a href="index.html" class="active">Prediksi AI</a></li>
+            <li><a href="kesehatan.html">Info Kesehatan</a></li>
+            <li><a href="lihatdata.html">Data</a></li>
         </ul>
     </nav>
+    
     <div class="container">
-        <h1>JasmaniAI</h1>
+        <h1>🤖 Prediksi Kebugaran Jasmani AI</h1>
+        <p class="subtitle">Input data tes jasmani, dapatkan prediksi bulan berikutnya</p>
+        
+        <div id="ml-status">🔄 Loading AI Model...</div>
+        
         <form id="jasmaniForm">
-            <label>Nama<input type="text" name="nama" required></label>
-            <label>Jarak Lari (meter): <input type="number" name="lari" required></label>
-            <label>Push-up (jumlah): <input type="number" name="pushup" required></label>
-            <label>Pull-up (jumlah): <input type="number" name="pullup" required></label>
-            <label>Sit-up (jumlah): <input type="number" name="situp" required></label>
-            <label>Shuttle Run (detik): <input type="number" name="shuttlerun" step="0.01" required></label>
-            <button type="submit">Klasifikasikan</button>
+            <h3>📝 Input Data Tes Jasmani</h3>
+            
+            <label>
+                👤 Nama:
+                <input type="text" name="nama" required placeholder="Masukkan nama lengkap">
+            </label>
+            
+            <label>
+                💪 Push-up (jumlah):
+                <input type="number" name="pushup" required min="0" max="100" placeholder="Contoh: 25">
+            </label>
+            
+            <label>
+                🤸‍♂️ Pull-up (jumlah):
+                <input type="number" name="pullup" required min="0" max="50" placeholder="Contoh: 10">
+            </label>
+            
+            <label>
+                🏃‍♂️ Lari 12 menit (meter):
+                <input type="number" name="lari" required min="1000" max="4000" placeholder="Contoh: 2500">
+            </label>
+            
+            <label>
+                🏋️‍♂️ Sit-up (jumlah):
+                <input type="number" name="situp" required min="0" max="100" placeholder="Contoh: 35">
+            </label>
+            
+            <label>
+                ⚡ Shuttle Run (detik):
+                <input type="number" name="shuttlerun" step="0.01" required min="10" max="30" placeholder="Contoh: 17.5">
+            </label>
+            
+            <button type="submit">🚀 Simpan & Prediksi</button>
         </form>
+        
         <div id="result"></div>
     </div>
+    
     <script type="module" src="/script.js"></script>
 </body>
 </html>

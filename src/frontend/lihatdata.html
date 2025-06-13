@@ -1,39 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lihat Data Jasmani</title>
+    <title>Data Jasmani - JasmaniAI</title>
     <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
     <nav class="navbar">
         <ul>
-            <li><a href="index.html">Klasifikasi</a></li>
-            <li><a href="kesehatan.html">Penjelasan Kesehatan</a></li>
-            <li><a href="lihatdata.html" class="active">Lihat Data</a></li>
+            <li><a href="index.html">Prediksi AI</a></li>
+            <li><a href="kesehatan.html">Info Kesehatan</a></li>
+            <li><a href="lihatdata.html" class="active">Data</a></li>
         </ul>
     </nav>
-    <h1>Data Jasmani</h1>
-    <table id="jasmani-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nama</th>
-                <th>Lari</th>
-                <th>Push Up</th>
-                <th>Pull Up</th>
-                <th>Sit Up</th>
-                <th>Shuttle Run</th>
-                <th>Skor</th>
-                <th>Kategori</th>
-                <th>Waktu</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be inserted here -->
-        </tbody>
-    </table>
+    
+    <div class="container">
+        <h1>📊 Data Tes Jasmani</h1>
+        
+        <table id="jasmani-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Push Up</th>
+                    <th>Pull Up</th>
+                    <th>Lari 12 Menit</th>
+                    <th>Sit Up</th>
+                    <th>Shuttle Run</th>
+                    <th>Tanggal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data akan dimuat di sini -->
+            </tbody>
+        </table>
+    </div>
+    
     <script type="module" src="/lihatdata.js"></script>
 </body>
 </html>

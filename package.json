@@ -1,0 +1,20 @@
+{
+  "name": "jasmani-ai",
+  "version": "1.0.0",
+  "description": "JasmaniAI - Prediksi Kebugaran dengan LSTM",
+  "scripts": {
+    "install-all": "cd src/backend && npm install && cd ../frontend && npm install",
+    "start-backend": "cd src/backend && npm install express cors body-parser sqlite3 && node server.js",
+    "start-frontend": "cd src/frontend && npm run dev",
+    "dev": "concurrently \"npm run start-backend\" \"npm run start-frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}

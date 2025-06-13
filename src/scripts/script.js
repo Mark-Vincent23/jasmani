@@ -1,3 +1,22 @@
+let model = null;
+let scaler = null;
+
+// Load model & scaler sekali saja saat halaman dimuat
+async function loadAI() {
+    try {
+        model = await tf.loadLayersModel('http://localhost:5000/model/model.json');
+        const response = await fetch('http://localhost:5000/model/scaler_lstm.json');
+        scaler = await response.json();
+        console.log('✅ Model & scaler loaded');
+        // Update status AI siap di UI jika perlu
+    } catch (err) {
+        console.error('❌ Gagal memuat model atau scaler:', err);
+        // Update status gagal di UI jika perlu
+    }
+}
+loadAI();
+
+// Handler form submit
 document.getElementById('jasmaniForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const form = e.target;
@@ -21,4 +40,5 @@ document.getElementById('jasmaniForm').addEventListener('submit', async function
     } catch (err) {
         document.getElementById('result').textContent = 'Terjadi kesalahan. Coba lagi.';
     }
+    // Jangan load model/scaler di sini!
 });
