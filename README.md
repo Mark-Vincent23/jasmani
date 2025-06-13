@@ -16,7 +16,8 @@ Website klasifikasi tes jasmani TNI berbasis Machine Learning.
    ```
 2. Jalankan frontend:
    ```powershell
-   cd src/backend
+   cd src/frontend
+   npm install
    npm run dev
    ```
 
