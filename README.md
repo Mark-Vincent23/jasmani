@@ -14,7 +14,11 @@ Website klasifikasi tes jasmani TNI berbasis Machine Learning.
    npm install express cors body-parser
    node server.js
    ```
-2. Buka `src/frontend/index.html` di browser.
+2. Jalankan frontend:
+   ```powershell
+   cd src/backend
+   npm run dev
+   ```
 
 ## Catatan
 - Endpoint API: `POST /api/klasifikasi`
