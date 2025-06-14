@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             const tbody = document.querySelector('#jasmani-table tbody');
             tbody.innerHTML = '';
+            
             data.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `

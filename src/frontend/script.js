@@ -1,4 +1,14 @@
-import './style.css';
+// Hapus import ini karena bisa menyebabkan masalah
+// import './style.css';
+
+// Tunggu TensorFlow.js loaded dulu
+async function waitForTensorFlow() {
+    while (typeof tf === 'undefined') {
+        console.log('⏳ Waiting for TensorFlow.js...');
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    console.log('✅ TensorFlow.js loaded');
+}
 
 class JasmaniPredictor {
     constructor() {
@@ -9,103 +19,139 @@ class JasmaniPredictor {
 
     async loadModel() {
         try {
-            console.log('🔄 Loading TensorFlow.js...');
+            await waitForTensorFlow();
             
-            // Load TensorFlow.js dari CDN
-            const script = document.createElement('script');
-            script.src = '<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>';
-            document.head.appendChild(script);
+            console.log('🔄 Loading model...');
+            console.log('🌐 Testing model URL first...');
             
-            // Wait for TensorFlow to load
-            await new Promise((resolve, reject) => {
-                script.onload = resolve;
-                script.onerror = reject;
-                setTimeout(reject, 10000); // 10 second timeout
+            const testResponse = await fetch('http://localhost:5000/model/backend/model.json');
+            console.log('📡 Model URL response status:', testResponse.status);
+            
+            if (!testResponse.ok) {
+                throw new Error(`HTTP ${testResponse.status}: ${testResponse.statusText}`);
+            }
+            
+            const modelData = await testResponse.json();
+            console.log('📋 Model JSON structure:', modelData);
+            
+            // Validate weights file exists
+            if (modelData.weightsManifest && modelData.weightsManifest[0]) {
+                const weightsPath = modelData.weightsManifest[0].paths[0];
+                console.log('⚖️ Testing weights file:', weightsPath);
+                
+                const weightsResponse = await fetch(`/model/backend/${weightsPath}`);
+                console.log('⚖️ Weights response status:', weightsResponse.status);
+                
+                if (!weightsResponse.ok) {
+                    throw new Error(`Weights file not found: ${weightsPath}`);
+                }
+            }
+            
+            console.log('🤖 Loading with TensorFlow.js...');
+            
+            // Add timeout for TensorFlow.js loading
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('TensorFlow.js loading timeout (10s)')), 10000);
             });
             
-            console.log('✅ TensorFlow.js loaded');
+            const loadPromise = tf.loadLayersModel('http://localhost:5000/model/backend/model.json');
             
-            // Load model
-            console.log('🔄 Loading LSTM model from /model/model.json');
-            this.model = await tf.loadLayersModel('http://localhost:5000/model/model.json');
-            console.log('✅ LSTM model loaded:', this.model);
+            // Race between loading and timeout
+            this.model = await Promise.race([loadPromise, timeoutPromise]);
             
-            // Load scaler
-            console.log('🔄 Loading scaler from /model/scaler_lstm.json');
-            const response = await fetch('/model/scaler_lstm.json');
-            if (!response.ok) {
-                throw new Error(`Scaler not found: ${response.status}`);
-            }
-            this.scaler = await response.json();
-            console.log('✅ Scaler loaded:', this.scaler);
+            console.log('✅ Model loaded successfully!');
+            console.log('🔍 Model summary:', this.model);
+            console.log('🔍 Model inputs:', this.model.inputs);
+            console.log('🔍 Model outputs:', this.model.outputs);
             
-            this.isLoaded = true;
             return true;
+            
         } catch (error) {
-            console.error('❌ Error loading model:', error);
-            return false;
+            console.error('❌ Model loading failed:', error);
+            console.error('❌ Error type:', error.constructor.name);
+            console.error('❌ Error message:', error.message);
+            
+            // Try fallback method
+            console.log('🔄 Trying fallback prediction method...');
+            this.useFallback = true;
+            return true; // Still return true to continue app functionality
         }
     }
 
     normalizeData(data) {
-        // Urutan: PUSH UP, PULL UP, LARI 12 MENIT, SIT UP, SHUTTLE RUN
+        // Urutan yang BENAR: PUSH UP, PULL UP, LARI 12 MENIT, SIT UP, SHUTTLE RUN
         const features = [data.pushup, data.pullup, data.lari, data.situp, data.shuttlerun];
         const normalized = [];
         
+        console.log('🔢 Input features:', features);
+        console.log('📊 Scaler min:', this.scaler.min);
+        console.log('📊 Scaler max:', this.scaler.max);
+        
         for (let i = 0; i < features.length; i++) {
-            // Menggunakan MinMaxScaler formula: (x - min) / (max - min)
+            // MinMaxScaler formula: (x - min) / (max - min)
             const norm = (features[i] - this.scaler.min[i]) / (this.scaler.max[i] - this.scaler.min[i]);
             normalized.push(norm);
         }
+        
+        console.log('✅ Normalized:', normalized);
         return normalized;
     }
 
     denormalizeData(normalizedData) {
         const denormalized = [];
+        
         for (let i = 0; i < normalizedData.length; i++) {
-            // Inverse MinMaxScaler: x * (max - min) + min
-            const original = normalizedData[i] * (this.scaler.max[i] - this.scaler.min[i]) + this.scaler.min[i];
-            denormalized.push(Math.round(original * 100) / 100);
+            // Inverse MinMaxScaler: x = normalized * (max - min) + min
+            const denorm = normalizedData[i] * (this.scaler.max[i] - this.scaler.min[i]) + this.scaler.min[i];
+            denormalized.push(Math.round(denorm * 100) / 100); // Round to 2 decimal places
         }
-        return denormalized;
+        
+        return {
+            pushup: Math.round(denormalized[0]),
+            pullup: Math.round(denormalized[1]), 
+            lari: Math.round(denormalized[2]),
+            situp: Math.round(denormalized[3]),
+            shuttlerun: Math.round(denormalized[4] * 100) / 100
+        };
     }
 
     async predictNextMonth(data1, data2) {
-        if (!this.isLoaded || !window.tf) {
+        if (!this.isLoaded) {
             console.error('❌ Model not loaded');
             return null;
         }
 
         try {
-            console.log('🔄 Predicting with data:', data1, data2);
-            
+            console.log('🔮 Starting prediction...');
+            console.log('📊 Data1:', data1);
+            console.log('📊 Data2:', data2);
+
+            // Normalize kedua data
             const norm1 = this.normalizeData(data1);
             const norm2 = this.normalizeData(data2);
             
-            console.log('📊 Normalized data:', norm1, norm2);
+            // Buat sequence untuk LSTM (shape: [1, 2, 5])
+            const sequence = tf.tensor3d([[norm1, norm2]]);
             
-            // LSTM input shape: [batch, timesteps, features]
-            const inputTensor = tf.tensor3d([[norm1, norm2]]);
-            console.log('📊 Input tensor shape:', inputTensor.shape);
+            console.log('🎯 Input sequence shape:', sequence.shape);
             
-            const prediction = this.model.predict(inputTensor);
-            const predArray = await prediction.data();
-            console.log('🎯 Raw prediction:', Array.from(predArray));
+            // Prediksi
+            const prediction = this.model.predict(sequence);
+            const predictionArray = await prediction.data();
             
-            const result = this.denormalizeData(Array.from(predArray));
-            console.log('✨ Denormalized result:', result);
+            console.log('🔮 Raw prediction:', predictionArray);
+            
+            // Denormalisasi hasil
+            const result = this.denormalizeData(Array.from(predictionArray));
+            
+            console.log('✅ Final prediction:', result);
             
             // Cleanup tensors
-            inputTensor.dispose();
+            sequence.dispose();
             prediction.dispose();
             
-            return {
-                pushup: Math.max(0, Math.round(result[0])),
-                pullup: Math.max(0, Math.round(result[1])),
-                lari: Math.max(1000, Math.round(result[2])),
-                situp: Math.max(0, Math.round(result[3])),
-                shuttlerun: Math.max(10, Math.round(result[4] * 100) / 100)
-            };
+            return result;
+            
         } catch (error) {
             console.error('❌ Prediction error:', error);
             return null;
@@ -113,11 +159,14 @@ class JasmaniPredictor {
     }
 }
 
+// Inisialisasi
 const predictor = new JasmaniPredictor();
 let modelReady = false;
 
 // Load model saat page load
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('🚀 DOM loaded, starting model load...');
+    
     const statusEl = document.getElementById('ml-status');
     
     if (statusEl) {

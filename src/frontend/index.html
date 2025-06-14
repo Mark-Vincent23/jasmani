@@ -3,63 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediksi Jasmani AI</title>
-    <link rel="stylesheet" href="/style.css">
+    <title>Jasmani AI</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html" class="active">Prediksi AI</a></li>
-            <li><a href="kesehatan.html">Info Kesehatan</a></li>
-            <li><a href="lihatdata.html">Data</a></li>
-        </ul>
-    </nav>
+    <!-- Status AI -->
+    <div id="ml-status">🔄 Loading...</div>
     
-    <div class="container">
-        <h1>🤖 Prediksi Kebugaran Jasmani AI</h1>
-        <p class="subtitle">Input data tes jasmani, dapatkan prediksi bulan berikutnya</p>
+    <!-- Form -->
+    <form id="jasmaniForm">
+        <h3>📝 Input Data Tes Jasmani</h3>
         
-        <div id="ml-status">🔄 Loading AI Model...</div>
+        <label>
+            👤 Nama:
+            <input type="text" name="nama" required placeholder="Masukkan nama lengkap">
+        </label>
         
-        <form id="jasmaniForm">
-            <h3>📝 Input Data Tes Jasmani</h3>
-            
-            <label>
-                👤 Nama:
-                <input type="text" name="nama" required placeholder="Masukkan nama lengkap">
-            </label>
-            
-            <label>
-                💪 Push-up (jumlah):
-                <input type="number" name="pushup" required min="0" max="100" placeholder="Contoh: 25">
-            </label>
-            
-            <label>
-                🤸‍♂️ Pull-up (jumlah):
-                <input type="number" name="pullup" required min="0" max="50" placeholder="Contoh: 10">
-            </label>
-            
-            <label>
-                🏃‍♂️ Lari 12 menit (meter):
-                <input type="number" name="lari" required min="1000" max="4000" placeholder="Contoh: 2500">
-            </label>
-            
-            <label>
-                🏋️‍♂️ Sit-up (jumlah):
-                <input type="number" name="situp" required min="0" max="100" placeholder="Contoh: 35">
-            </label>
-            
-            <label>
-                ⚡ Shuttle Run (detik):
-                <input type="number" name="shuttlerun" step="0.01" required min="10" max="30" placeholder="Contoh: 17.5">
-            </label>
-            
-            <button type="submit">🚀 Simpan & Prediksi</button>
-        </form>
+        <label>
+            💪 Push-up (jumlah):
+            <input type="number" name="pushup" required min="0" max="100" placeholder="Contoh: 25">
+        </label>
         
-        <div id="result"></div>
-    </div>
+        <label>
+            🤸‍♂️ Pull-up (jumlah):
+            <input type="number" name="pullup" required min="0" max="50" placeholder="Contoh: 10">
+        </label>
+        
+        <label>
+            🏃‍♂️ Lari 12 menit (meter):
+            <input type="number" name="lari" required min="1000" max="4000" placeholder="Contoh: 2500">
+        </label>
+        
+        <label>
+            🏋️‍♂️ Sit-up (jumlah):
+            <input type="number" name="situp" required min="0" max="100" placeholder="Contoh: 35">
+        </label>
+        
+        <label>
+            ⚡ Shuttle Run (detik):
+            <input type="number" name="shuttlerun" step="0.01" required min="10" max="30" placeholder="Contoh: 17.5">
+        </label>
+        
+        <button type="submit">🚀 Simpan & Prediksi</button>
+    </form>
     
-    <script type="module" src="/script.js"></script>
+    <div id="result"></div>
+    
+    <!-- Load TensorFlow.js DULU -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+    <!-- BARU load script kita -->
+    <script src="script.js"></script>
 </body>
 </html>
