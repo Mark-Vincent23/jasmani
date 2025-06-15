@@ -129,7 +129,7 @@ app.get('/api/data', (req, res) => {
 app.get('/api/data/:nama', (req, res) => {
     const nama = req.params.nama;
     db.all(
-        'SELECT * FROM jasmani WHERE nama = ? ORDER BY timestamp DESC LIMIT 10',
+        'SELECT * FROM jasmani WHERE nama = ? ORDER BY timestamp DESC LIMIT 5',
         [nama],
         (err, rows) => {
             if (err) {
