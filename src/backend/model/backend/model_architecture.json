@@ -9,7 +9,7 @@
         "config": {
           "batch_input_shape": [
             null,
-            3,
+            5,
             5
           ],
           "dtype": "float32",
@@ -75,7 +75,7 @@
         "build_config": {
           "input_shape": [
             null,
-            3,
+            5,
             5
           ]
         }

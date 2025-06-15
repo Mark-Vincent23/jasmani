@@ -1,7 +1,7 @@
 {
   "format": "layers-model",
-  "generatedBy": "JasmaniAI",
-  "convertedBy": "manual",
+  "generatedBy": "JasmaniAI 5-Month Predictor",
+  "convertedBy": "manual_5month_conversion",
   "modelTopology": {
     "keras_version": "2.15.0",
     "backend": "tensorflow",
@@ -16,7 +16,7 @@
             "config": {
               "batch_input_shape": [
                 null,
-                3,
+                5,
                 5
               ],
               "dtype": "float32",
@@ -82,7 +82,7 @@
             "build_config": {
               "input_shape": [
                 null,
-                3,
+                5,
                 5
               ]
             }

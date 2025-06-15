@@ -24,7 +24,7 @@ class JasmaniPredictor {
             console.log('🔄 Loading LSTM model...');
             
             // Load TensorFlow.js LSTM model
-            this.model = await tf.loadLayersModel('/model/backend/model.json');
+            this.model = await tf.loadLayersModel('http://localhost:5000/model/backend/model.json');
             console.log('✅ LSTM model loaded successfully!');
             console.log('🏗️ Model architecture:');
             console.log('   - Input shape:', this.model.inputs[0].shape); // [null, 3, 5]
@@ -32,7 +32,7 @@ class JasmaniPredictor {
             console.log('   - Layers:', this.model.layers.length);
             
             // Load scaler with proper format
-            const scalerResponse = await fetch('/model/backend/scaler_lstm.json');
+            const scalerResponse = await fetch('http://localhost:5000/model/backend/scaler_lstm.json');
             if (!scalerResponse.ok) {
                 throw new Error('Scaler file not found');
             }
@@ -108,32 +108,32 @@ class JasmaniPredictor {
             throw new Error('LSTM Model not loaded');
         }
 
-        if (historyData.length < 3) {
-            throw new Error('LSTM model requires minimum 3 data points for sequence prediction');
+        if (historyData.length < 5) { // CHANGED: 5 bukan 3
+            throw new Error('LSTM model requires minimum 5 data points for sequence prediction');
         }
 
         try {
             console.log('🧠 Starting LSTM prediction...');
             console.log('📊 History data points:', historyData.length);
             
-            // Ambil 3 data terakhir untuk sequence input [timesteps=3, features=5]
-            const last3Data = historyData.slice(0, 3).reverse(); // Reverse untuk urutan chronological
+            // Ambil 5 data terakhir untuk sequence input [timesteps=5, features=5]
+            const last5Data = historyData.slice(-5).reverse(); // CHANGED: 5 bukan 3
             
-            console.log('🔄 Preparing sequence data:', last3Data);
+            console.log('🔄 Preparing 5-month sequence data:', last5Data);
             
             // Normalize setiap data point
             const normalizedSequence = [];
-            for (let i = 0; i < last3Data.length; i++) {
-                const normalizedPoint = this.normalizeData(last3Data[i]);
+            for (let i = 0; i < last5Data.length; i++) {
+                const normalizedPoint = this.normalizeData(last5Data[i]);
                 normalizedSequence.push(normalizedPoint);
             }
             
-            console.log('✅ Normalized sequence:', normalizedSequence);
+            console.log('✅ Normalized sequence (5 months):', normalizedSequence);
             
-            // Buat tensor dengan shape [1, 3, 5] sesuai model input
-            // batch_size=1, timesteps=3, features=5
+            // Buat tensor dengan shape [1, 5, 5] sesuai model input
+            // batch_size=1, timesteps=5, features=5
             const inputTensor = tf.tensor3d([normalizedSequence]);
-            console.log('🎯 Input tensor shape:', inputTensor.shape); // Should be [1, 3, 5]
+            console.log('🎯 Input tensor shape:', inputTensor.shape); // Should be [1, 5, 5]
             
             // LSTM Prediction
             console.log('🧠 Running LSTM Neural Network...');
@@ -145,9 +145,10 @@ class JasmaniPredictor {
             
             const predictionArray = await prediction.data();
             console.log('🔮 Raw LSTM output:', Array.from(predictionArray));
-            
+        
             // Denormalize prediction results
             const denormalizedPrediction = this.denormalizeData(Array.from(predictionArray));
+            
             console.log('✅ Final LSTM prediction:', denormalizedPrediction);
             
             // Cleanup tensors
@@ -193,9 +194,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         alert('CRITICAL ERROR: LSTM Machine Learning model gagal dimuat!\n\n' + 
-              'Model: LSTM Sequential dengan 3 timesteps\n' +
+              'Model: LSTM Sequential dengan 5 timesteps (5 bulan → prediksi bulan 6)\n' +
               'Error: ' + error.message + '\n\n' + 
-              'Aplikasi memerlukan LSTM model untuk time series prediction.');
+              'Aplikasi memerlukan LSTM model untuk 5-month time series prediction.');
     }
 });
 
@@ -223,7 +224,7 @@ document.getElementById('jasmaniForm').addEventListener('submit', async function
     
     try {
         // 1. Save to database
-        const response = await fetch('/api/simpan', {
+        const response = await fetch('http://localhost:5000/api/simpan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -251,12 +252,12 @@ document.getElementById('jasmaniForm').addEventListener('submit', async function
         // 2. LSTM Time Series Prediction
         console.log('🧠 Fetching history for LSTM prediction...');
         
-        const historyRes = await fetch(`/api/data/${encodeURIComponent(data.nama)}`);
+        const historyRes = await fetch(`http://localhost:5000/api/data/${encodeURIComponent(data.nama)}`);
         const history = await historyRes.json();
         
         console.log('📊 History retrieved:', history.length, 'records');
         
-        if (history.length >= 3) {
+        if (history.length >= 5) {
             console.log('🎯 Running LSTM Time Series Prediction...');
             
             const prediction = await predictor.predictNextMonth(history);
@@ -272,16 +273,18 @@ document.getElementById('jasmaniForm').addEventListener('submit', async function
                         <p><strong>Shuttle Run:</strong> ${prediction.shuttlerun} detik</p>
                     </div>
                     <p class="ai-info">🤖 Model: LSTM Neural Network (64 units + Dense layers)</p>
-                    <p class="ai-info">📊 Sequence Length: 3 timesteps</p>
+                    <p class="ai-info">📊 Sequence Length: 5 months → predict month 6</p>
+                    <p class="ai-info">🎯 Model trained on 500 real students with trend patterns</p>
                 </div>
             `;
         } else {
             html += `
                 <div class="info-card">
                     <h3>📊 LSTM Training Data Required</h3>
-                    <p>LSTM model memerlukan minimal <strong>3 sequential data points</strong> untuk time series prediction.</p>
+                    <p>LSTM model memerlukan minimal <strong>5 sequential data points</strong> untuk time series prediction.</p>
                     <p>Data saat ini: <strong>${history.length}</strong> untuk "${data.nama}"</p>
-                    <p>Masukkan ${3 - history.length} data lagi untuk aktivasi LSTM prediction! 🧠📈</p>
+                    <p>Masukkan ${5 - history.length} data lagi untuk aktivasi LSTM prediction! 🧠📈</p>
+                    <p><strong>Cara kerja:</strong> Input 5 bulan berurutan → Prediksi bulan ke-6</p>
                 </div>
             `;
         }
