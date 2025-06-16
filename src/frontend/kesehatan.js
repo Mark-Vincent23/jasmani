@@ -1,13 +1,21 @@
 import './style.css';
-// ...existing code from kesehatan.js...
-document.getElementById('topicSelect').addEventListener('change', function() {
-    const content = {
-        lari: `<h2>Manfaat Lari</h2><ul><li>Meningkatkan kesehatan jantung dan paru-paru</li><li>Melatih daya tahan tubuh</li><li>Membakar kalori dan menjaga berat badan</li></ul>`,
-        pushup: `<h2>Manfaat Push-up</h2><ul><li>Memperkuat otot dada, bahu, dan lengan</li><li>Meningkatkan stabilitas tubuh bagian atas</li><li>Meningkatkan kekuatan inti</li></ul>`,
-        pullup: `<h2>Manfaat Pull-up</h2><ul><li>Melatih otot punggung dan lengan</li><li>Meningkatkan kekuatan genggaman</li><li>Menambah massa otot tubuh bagian atas</li></ul>`,
-        situp: `<h2>Manfaat Sit-up</h2><ul><li>Memperkuat otot perut</li><li>Meningkatkan fleksibilitas pinggang</li><li>Mendukung postur tubuh yang baik</li></ul>`,
-        shuttlerun: `<h2>Manfaat Shuttle Run</h2><ul><li>Melatih kelincahan dan kecepatan</li><li>Meningkatkan koordinasi tubuh</li><li>Baik untuk latihan interval</li></ul>`
-    };
-    const value = this.value;
-    document.getElementById('topicContent').innerHTML = content[value] || '';
+
+// Dokumen sudah menampilkan semua informasi kesehatan dalam grid
+// Kode ini hanya untuk tujuan kompatibilitas jika dibutuhkan nanti
+document.addEventListener('DOMContentLoaded', function() {
+    // Menambahkan interaktivitas tambahan jika dibutuhkan
+    const healthCards = document.querySelectorAll('.health-card');
+    
+    healthCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'transform 0.3s ease';
+            this.style.boxShadow = '0 8px 15px rgba(0,0,0,0.1)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+        });
+    });
 });
